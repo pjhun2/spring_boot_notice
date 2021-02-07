@@ -5,6 +5,7 @@ import java.util.List;
 import com.cis.myhome.model.Board;
 import com.cis.myhome.repository.BoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +13,7 @@ import javax.ws.rs.NotFoundException;
 
 @RestController
 @RequestMapping("/api")
-public class BoardApiContoller {
+public class BoardApiController {
 
 
         @Autowired
@@ -21,11 +22,12 @@ public class BoardApiContoller {
         // Aggregate root
         // tag::get-aggregate-root[]
         @GetMapping("/boards")
-        List<Board> all(@RequestParam(required = false) String title) {
-            if(StringUtils.isEmpty(title)){
+        List<Board> all(@RequestParam(required = false) String title,
+        @RequestParam(required = false, defaultValue = "") String content) {
+            if(StringUtils.isEmpty(title) && StringUtils.isEmpty(content)){
                 return repository.findAll();
             } else {
-                return repository.findByTitle(title);
+                return repository.findByTitleOrContent(title, content);
             }
         }
         // end::get-aggregate-root[]
