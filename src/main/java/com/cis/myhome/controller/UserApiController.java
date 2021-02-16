@@ -1,5 +1,6 @@
 package com.cis.myhome.controller;
 
+import com.cis.myhome.model.Board;
 import com.cis.myhome.model.User;
 import com.cis.myhome.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,12 @@ public class UserApiController {
                     .map(user -> {
 //                        user.setTitle(newuser.getTitle());
 //                        user.setContent(newuser.getContent());
-                        user.setBoards(newuser.getBoards());
+                       // user.setBoards(newuser.getBoards());
+                        user.getBoards().clear();
+                        user.getBoards().addAll(newuser.getBoards());
+                        for(Board board : user.getBoards()) {
+                            board.setUser(user);
+                        }
                         return repository.save(user);
                     })
                     .orElseGet(() -> {
